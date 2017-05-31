@@ -5,7 +5,7 @@ services:
     nginx:
         build: ./rev-proxy
         ports:
-          - "8080:8080"
+          - "8089:8080"
         networks:
           - internal-net
 
@@ -13,6 +13,12 @@ services:
         build: ./web
         networks:
           - internal-net
-        
+          - db-net
+    db:
+        build: ./db
+        networks:
+          - db-net
+
 networks:
     internal-net:
+    db-net:
