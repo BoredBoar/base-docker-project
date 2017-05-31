@@ -1,0 +1,18 @@
+version: '2'
+
+services:
+
+    nginx:
+        build: ./rev-proxy
+        ports:
+          - "8080:8080"
+        networks:
+          - internal-net
+
+    web:
+        build: ./web
+        networks:
+          - internal-net
+        
+networks:
+    internal-net:
