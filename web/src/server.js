@@ -13,7 +13,7 @@ app.get('/', function (req, res) {
       if (err) console.error("Error encoutered:", err);
       console.log('found docs:', res);
   })
-  res.send('Hello World!');
+  res.sendFile('/proj/src/html/index.html');
 });
 
 app.listen(3000, function () {
