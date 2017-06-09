@@ -10,7 +10,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "*",
-    "massive": "*"
+    "express": "4",
+    "socket.io": "2",
+    "massive": "2",
+    "socket.io": "2"
   }
 }

@@ -9,6 +9,7 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
         <script src="https://unpkg.com/vue"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>
+				<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.2/socket.io.js"></script>
         <style>
 
         	body {
@@ -37,80 +38,40 @@
 
             // page is now ready, initialize the calendar...
 
-            $('#calendar').fullCalendar({
-                // put your options and callbacks here
-                header: {
-    				left: 'prev,next today',
-    				center: 'title',
-    				right: 'month,basicWeek,basicDay'
-    			},
-    			defaultDate: '2017-05-12',
-    			navLinks: true, // can click day/week names to navigate views
-    			editable: true,
-    			eventLimit: true, // allow "more" link when too many events
-    			events: [
-    				{
-    					title: 'All Day Event',
-    					start: '2017-05-01'
-    				},
-    				{
-    					title: 'Long Event',
-    					start: '2017-05-07',
-    					end: '2017-05-10'
-    				},
-    				{
-    					id: 999,
-    					title: 'Repeating Event',
-    					start: '2017-05-09T16:00:00'
-    				},
-    				{
-    					id: 999,
-    					title: 'Repeating Event',
-    					start: '2017-05-16T16:00:00'
-    				},
-    				{
-    					title: 'Conference',
-    					start: '2017-05-11',
-    					end: '2017-05-13'
-    				},
-    				{
-    					title: 'Meeting',
-    					start: '2017-05-12T10:30:00',
-    					end: '2017-05-12T12:30:00'
-    				},
-    				{
-    					title: 'Lunch',
-    					start: '2017-05-12T12:00:00'
-    				},
-    				{
-    					title: 'Meeting',
-    					start: '2017-05-12T14:30:00'
-    				},
-    				{
-    					title: 'Happy Hour',
-    					start: '2017-05-12T17:30:00'
-    				},
-    				{
-    					title: 'Dinner',
-    					start: '2017-05-12T20:00:00'
-    				},
-    				{
-    					title: 'Birthday Party',
-    					start: '2017-05-13T07:00:00'
-    				},
-    				{
-    					title: 'Click for Google',
-    					url: 'http://google.com/',
-    					start: '2017-05-28'
-    				}
-    			]
-            });
+
+						var socket = io();
 
             var app = new Vue({
                 el: '#app',
                 data: {
-                message: 'Hello Vue!'
-                }
+                	message: 'Hello Vue!'
+                },
+								created: function() {
+									socket.on('connect', function() {
+										console.log('client connected');
+									});
+									$('#calendar').fullCalendar({
+											// put your options and callbacks here
+											header: {
+												left: 'prev,next today',
+												center: 'title',
+												right: 'month,basicWeek,basicDay'
+											},
+											defaultDate: '2017-05-12',
+											navLinks: true, // can click day/week names to navigate views
+											editable: true,
+											eventLimit: true, // allow "more" link when too many events
+											events: function(start, end, timezone, callback) {
+												socket.emit('get calendar', {data:'send me the calendar'});
+												events = [];
+												console.log("dynamic events!", start, end, timezone);
+												callback(events);
+											}
+									});
+									socket.on('calendar events', function(data){
+										$('#calendar').fullCalendar('renderEvents',data.events);
+									});
+								}
             });
 
         });

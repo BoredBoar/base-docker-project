@@ -27,4 +27,10 @@ services:
 
 networks:
     internal-net:
+      ipam:
+        config:
+          - subnet: 192.169.0.0/16
     db-net:
+        ipam:
+          config:
+            - subnet: 192.170.0.0/16
